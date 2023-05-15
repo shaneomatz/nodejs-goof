@@ -6,15 +6,12 @@ jobs:
   build:
     docker:
       - image: cimg/node:lts
+    environment:
+      IMAGE_NAME: ss20matz/nodejs1
     steps:
       - checkout
-      - run: npm ci
-      - snyk/install
-      - run:
-          command: snyk version
-          name: Which version of snyk is installed
-      - run:
-          command: snyk code test
-          name: Run code scan
+      - setup_remote_docker
+      - run: docker build -t $IMAGE_NAME .
+      - snyk/scan:
+          docker-image-name: $IMAGE_NAME
 workflows: null
-#run1
